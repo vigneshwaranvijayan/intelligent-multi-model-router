@@ -1,0 +1,29 @@
+policies:
+  balanced:
+    quality_weight: 0.52
+    latency_weight: 0.23
+    cost_weight: 0.15
+    reliability_weight: 0.10
+    minimum_quality: 0.55
+
+  quality_first:
+    quality_weight: 0.75
+    latency_weight: 0.10
+    cost_weight: 0.05
+    reliability_weight: 0.10
+    minimum_quality: 0.72
+
+  cost_first:
+    quality_weight: 0.36
+    latency_weight: 0.18
+    cost_weight: 0.38
+    reliability_weight: 0.08
+    minimum_quality: 0.50
+
+  realtime:
+    quality_weight: 0.35
+    latency_weight: 0.45
+    cost_weight: 0.08
+    reliability_weight: 0.12
+    minimum_quality: 0.52
+    maximum_latency_ms: 1200

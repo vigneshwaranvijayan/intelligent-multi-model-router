@@ -1,0 +1,59 @@
+services:
+  gateway:
+    build: .
+    command: uvicorn multirouter.api:app --host 0.0.0.0 --port 8000
+    environment:
+      MULTIROUTER_CONFIG_DIR: /app/configs/docker
+      MULTIROUTER_ROUTER: utility
+      MULTIROUTER_REQUEST_TIMEOUT_SECONDS: 10
+    volumes:
+      - ./configs:/app/configs:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      small-model:
+        condition: service_healthy
+      medium-model:
+        condition: service_healthy
+      code-model:
+        condition: service_healthy
+
+  small-model:
+    build: .
+    command: uvicorn multirouter.mock_backend:app --host 0.0.0.0 --port 8101
+    environment:
+      MODEL_ID: small-general
+      MODEL_LATENCY_MS: 120
+      MODEL_QUALITY: 0.67
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8101/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+
+  medium-model:
+    build: .
+    command: uvicorn multirouter.mock_backend:app --host 0.0.0.0 --port 8102
+    environment:
+      MODEL_ID: medium-general
+      MODEL_LATENCY_MS: 300
+      MODEL_QUALITY: 0.83
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8102/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+
+  code-model:
+    build: .
+    command: uvicorn multirouter.mock_backend:app --host 0.0.0.0 --port 8103
+    environment:
+      MODEL_ID: code-specialist
+      MODEL_LATENCY_MS: 450
+      MODEL_QUALITY: 0.92
+      MODEL_SPECIALITY: coding
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8103/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 10

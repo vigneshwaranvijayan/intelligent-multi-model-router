@@ -1,0 +1,45 @@
+models:
+  - id: small-general
+    endpoint: http://small-model:8101
+    max_context_tokens: 8192
+    privacy_levels: [public, internal, confidential]
+    capabilities: [chat, classification, extraction, summarisation]
+    input_cost_per_1k: 0.0002
+    output_cost_per_1k: 0.0004
+    quality_prior: 0.67
+    latency_prior_ms: 120
+    task_affinity:
+      classification: 0.08
+      extraction: 0.07
+      summarisation: -0.03
+      coding: -0.22
+      mathematics: -0.18
+
+  - id: medium-general
+    endpoint: http://medium-model:8102
+    max_context_tokens: 32768
+    privacy_levels: [public, internal, confidential]
+    capabilities: [chat, classification, extraction, summarisation, reasoning, structured_output]
+    input_cost_per_1k: 0.0010
+    output_cost_per_1k: 0.0020
+    quality_prior: 0.83
+    latency_prior_ms: 300
+    task_affinity:
+      summarisation: 0.05
+      reasoning: 0.04
+      coding: 0.01
+      mathematics: 0.01
+
+  - id: code-specialist
+    endpoint: http://code-model:8103
+    max_context_tokens: 32768
+    privacy_levels: [public, internal]
+    capabilities: [chat, coding, code_debugging, structured_output]
+    input_cost_per_1k: 0.0014
+    output_cost_per_1k: 0.0028
+    quality_prior: 0.86
+    latency_prior_ms: 450
+    task_affinity:
+      coding: 0.12
+      code_debugging: 0.14
+      general: -0.04
